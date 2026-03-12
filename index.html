@@ -19,995 +19,734 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* 기존 스타일 동일 (생략) */
         :root {
             --ink: #1a1a2e;
-    --paper: #faf8f3;
-    --cream: #f2ede3;
-    --accent: #c8603a;
-    --accent-light: #f0d9cf;
-    --gold: #b8923a;
-    --muted: #7a7060;
-    --border: #d4c9b8;
-    --correct: #3a7a5a;
-    --wrong: #9a3a3a;
-    --correct-bg: #e8f5ed;
-    --wrong-bg: #f5e8e8;
-  }
+            --paper: #faf8f3;
+            --cream: #f2ede3;
+            --accent: #c8603a;
+            --accent-light: #f0d9cf;
+            --gold: #b8923a;
+            --muted: #7a7060;
+            --border: #d4c9b8;
+            --correct: #3a7a5a;
+            --wrong: #9a3a3a;
+            --correct-bg: #e8f5ed;
+            --wrong-bg: #f5e8e8;
+        }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background-image:
-      radial-gradient(ellipse at 10% 20%, rgba(200,96,58,0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at 90% 80%, rgba(184,146,58,0.06) 0%, transparent 50%);
-  }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-image:
+                radial-gradient(ellipse at 10% 20%, rgba(200,96,58,0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(184,146,58,0.06) 0%, transparent 50%);
+        }
 
-  .quiz-shell {
-    width: 100%;
-    max-width: 680px;
-  }
+        .quiz-shell {
+            width: 100%;
+            max-width: 680px;
+        }
 
-  /* ── Index Screen ── */
-  #index-screen {
-    animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  #quiz-screen { display: none; }
+        /* ── Index Screen ── */
+        #index-screen {
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #quiz-screen { display: none; }
 
-  .index-logo {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  .index-logo img {
-    height: 48px;
-    width: auto;
-    object-fit: contain;
-  }
-  .index-card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    box-shadow: 0 2px 24px rgba(26,26,46,0.07);
-    overflow: hidden;
-  }
-  .index-hero {
-    background: var(--ink);
-    padding: 3rem 2.5rem 2.5rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .index-hero::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 200px; height: 200px;
-    border-radius: 50%;
-    background: rgba(200,96,58,0.12);
-  }
-  .index-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -30px; left: -30px;
-    width: 150px; height: 150px;
-    border-radius: 50%;
-    background: rgba(184,146,58,0.1);
-  }
-  .index-issue {
-    display: inline-block;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    background: rgba(200,96,58,0.15);
-    border: 1px solid rgba(200,96,58,0.3);
-    padding: 0.3rem 0.8rem;
-    border-radius: 2px;
-    margin-bottom: 1.25rem;
-    position: relative;
-    z-index: 1;
-  }
-  .index-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1.45;
-    margin-bottom: 0.75rem;
-    position: relative;
-    z-index: 1;
-  }
-  .index-subtitle {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.03em;
-    position: relative;
-    z-index: 1;
-  }
-  .index-body { padding: 2rem 2.5rem; }
-  .index-meta {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .meta-item {
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1rem;
-    text-align: center;
-  }
-  .meta-icon { font-size: 1.3rem; margin-bottom: 0.35rem; }
-  .meta-label {
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    font-weight: 500;
-    margin-bottom: 0.2rem;
-    display: block;
-  }
-  .meta-value {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .index-desc {
-    font-size: 0.88rem;
-    color: var(--muted);
-    line-height: 1.75;
-    margin-bottom: 2rem;
-    padding: 1.25rem;
-    background: var(--cream);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 4px 4px 0;
-  }
-  .index-topics { margin-bottom: 2rem; }
-  .index-topics-title {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-  }
-  .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .topic-tag {
-    font-size: 0.75rem;
-    color: var(--ink);
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 0.3rem 0.75rem;
-    font-weight: 500;
-  }
-  .btn-start {
-    width: 100%;
-    background: var(--accent);
-    color: #fff;
-    padding: 1rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-    border-radius: 3px;
-    cursor: pointer;
-    border: none;
-    font-family: 'Noto Sans KR', sans-serif;
-    letter-spacing: 0.05em;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-  .btn-start:hover {
-    background: #a84e2c;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(200,96,58,0.35);
-  }
-  .btn-start-arrow { font-size: 1.1rem; transition: transform 0.2s; }
-  .btn-start:hover .btn-start-arrow { transform: translateX(4px); }
+        .index-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .index-logo img {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+        }
+        .index-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-shadow: 0 2px 24px rgba(26,26,46,0.07);
+            overflow: hidden;
+        }
+        .index-hero {
+            background: var(--ink);
+            padding: 3rem 2.5rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .index-hero::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: rgba(200,96,58,0.12);
+        }
+        .index-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30px; left: -30px;
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            background: rgba(184,146,58,0.1);
+        }
+        .index-issue {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            background: rgba(200,96,58,0.15);
+            border: 1px solid rgba(200,96,58,0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2px;
+            margin-bottom: 1.25rem;
+            position: relative;
+            z-index: 1;
+        }
+        .index-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.45;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+        }
+        .index-subtitle {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 0.03em;
+            position: relative;
+            z-index: 1;
+        }
+        .index-body { padding: 2rem 2.5rem; }
+        .index-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .meta-item {
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .meta-icon { font-size: 1.3rem; margin-bottom: 0.35rem; }
+        .meta-label {
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+            display: block;
+        }
+        .meta-value {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .index-desc {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.75;
+            margin-bottom: 2rem;
+            padding: 1.25rem;
+            background: var(--cream);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 4px 4px 0;
+        }
+        .index-topics { margin-bottom: 2rem; }
+        .index-topics-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+        .topic-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .topic-tag {
+            font-size: 0.75rem;
+            color: var(--ink);
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 0.3rem 0.75rem;
+            font-weight: 500;
+        }
+        .btn-start {
+            width: 100%;
+            background: var(--accent);
+            color: #fff;
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 3px;
+            cursor: pointer;
+            border: none;
+            font-family: 'Noto Sans KR', sans-serif;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn-start:hover {
+            background: #a84e2c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200,96,58,0.35);
+        }
+        .btn-start-arrow { font-size: 1.1rem; transition: transform 0.2s; }
+        .btn-start:hover .btn-start-arrow { transform: translateX(4px); }
 
-  /* Header */
-  .quiz-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid var(--border);
-    position: relative;
-  }
-  .quiz-header::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: var(--accent);
-  }
-  .quiz-eyebrow {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-  }
-  .quiz-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.3;
-  }
+        /* Header */
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            position: relative;
+        }
+        .quiz-header::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+        .quiz-eyebrow {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+        .quiz-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.3;
+        }
 
-  /* Progress */
-  .progress-area {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .progress-label {
-    font-size: 0.8rem;
-    color: var(--muted);
-    white-space: nowrap;
-    font-weight: 500;
-    min-width: 3.5rem;
-  }
-  .progress-track {
-    flex: 1;
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--gold));
-    border-radius: 2px;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+        /* Progress */
+        .progress-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .progress-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            white-space: nowrap;
+            font-weight: 500;
+            min-width: 3.5rem;
+        }
+        .progress-track {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            border-radius: 2px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-  /* Card */
-  .card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    box-shadow: 0 2px 20px rgba(26,26,46,0.06), 0 8px 40px rgba(26,26,46,0.03);
-    overflow: hidden;
-    display: none;
-    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .card.active { display: block; }
+        /* Card */
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-shadow: 0 2px 20px rgba(26,26,46,0.06), 0 8px 40px rgba(26,26,46,0.03);
+            overflow: hidden;
+            display: none;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card.active { display: block; }
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-  .card-top {
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
-    padding: 1.25rem 1.75rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .q-badge {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    background: var(--accent-light);
-    padding: 0.3rem 0.65rem;
-    border-radius: 2px;
-    white-space: nowrap;
-  }
-  .q-category {
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-weight: 400;
-  }
+        .card-top {
+            background: var(--cream);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .q-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            background: var(--accent-light);
+            padding: 0.3rem 0.65rem;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+        .q-category {
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-weight: 400;
+        }
 
-  .card-body { padding: 2rem 1.75rem; }
+        .card-body { padding: 2rem 1.75rem; }
 
-  .question-text {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.75;
-    color: var(--ink);
-    margin-bottom: 1.75rem;
-  }
+        .question-text {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.75;
+            color: var(--ink);
+            margin-bottom: 1.75rem;
+        }
 
-  /* Options */
-  .options { display: flex; flex-direction: column; gap: 0.6rem; }
+        /* Options */
+        .options { display: flex; flex-direction: column; gap: 0.6rem; }
 
-  .option {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-    padding: 0.9rem 1rem;
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    background: var(--paper);
-    position: relative;
-    overflow: hidden;
-  }
-  .option::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--accent-light);
-    opacity: 0;
-    transition: opacity 0.18s;
-  }
-  .option:hover::before { opacity: 1; }
-  .option:hover { border-color: var(--accent); }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            padding: 0.9rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            background: var(--paper);
+            position: relative;
+            overflow: hidden;
+        }
+        .option::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent-light);
+            opacity: 0;
+            transition: opacity 0.18s;
+        }
+        .option:hover::before { opacity: 1; }
+        .option:hover { border-color: var(--accent); }
 
-  .option.selected {
-    border-color: var(--accent);
-    background: var(--accent-light);
-  }
-  .option.correct {
-    border-color: var(--correct);
-    background: var(--correct-bg);
-  }
-  .option.wrong {
-    border-color: var(--wrong);
-    background: var(--wrong-bg);
-  }
-  .option.dimmed { opacity: 0.45; cursor: default; }
-  .option.dimmed::before { display: none; }
+        .option.selected {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+        .option.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+        .option.wrong {
+            border-color: var(--wrong);
+            background: var(--wrong-bg);
+        }
+        .option.dimmed { opacity: 0.45; cursor: default; }
+        .option.dimmed::before { display: none; }
 
-  .option-key {
-    width: 26px;
-    height: 26px;
-    border-radius: 3px;
-    background: var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--muted);
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1;
-    transition: all 0.18s;
-  }
-  .option:hover .option-key { background: var(--accent); color: #fff; }
-  .option.selected .option-key { background: var(--accent); color: #fff; }
-  .option.correct .option-key { background: var(--correct); color: #fff; }
-  .option.wrong .option-key { background: var(--wrong); color: #fff; }
+        .option-key {
+            width: 26px;
+            height: 26px;
+            border-radius: 3px;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--muted);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            transition: all 0.18s;
+        }
+        .option:hover .option-key { background: var(--accent); color: #fff; }
+        .option.selected .option-key { background: var(--accent); color: #fff; }
+        .option.correct .option-key { background: var(--correct); color: #fff; }
+        .option.wrong .option-key { background: var(--wrong); color: #fff; }
 
-  .option-text {
-    font-size: 0.9rem;
-    line-height: 1.55;
-    color: var(--ink);
-    position: relative;
-    z-index: 1;
-    padding-top: 2px;
-  }
+        .option-text {
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: var(--ink);
+            position: relative;
+            z-index: 1;
+            padding-top: 2px;
+        }
 
-  /* Feedback */
-  .feedback {
-    margin-top: 1.25rem;
-    padding: 1rem 1.25rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    display: none;
-    border-left: 3px solid transparent;
-  }
-  .feedback.show { display: flex; align-items: flex-start; gap: 0.75rem; animation: fadeIn 0.3s ease; }
-  .feedback.correct-fb {
-    background: var(--correct-bg);
-    border-color: var(--correct);
-    color: #1a3d2a;
-  }
-  .feedback.wrong-fb {
-    background: var(--wrong-bg);
-    border-color: var(--wrong);
-    color: #3d1a1a;
-  }
-  .feedback-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-  .feedback-content strong { display: block; margin-bottom: 0.25rem; font-weight: 700; }
+        /* Feedback */
+        .feedback {
+            margin-top: 1.25rem;
+            padding: 1rem 1.25rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            display: none;
+            border-left: 3px solid transparent;
+        }
+        .feedback.show { display: flex; align-items: flex-start; gap: 0.75rem; animation: fadeIn 0.3s ease; }
+        .feedback.correct-fb {
+            background: var(--correct-bg);
+            border-color: var(--correct);
+            color: #1a3d2a;
+        }
+        .feedback.wrong-fb {
+            background: var(--wrong-bg);
+            border-color: var(--wrong);
+            color: #3d1a1a;
+        }
+        .feedback-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+        .feedback-content strong { display: block; margin-bottom: 0.25rem; font-weight: 700; }
 
-  /* Hint */
-  .hint-area { margin-top: 1rem; }
-  .hint-toggle {
-    background: none;
-    border: 1px dashed var(--border);
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-size: 0.78rem;
-    color: var(--muted);
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: all 0.18s;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .hint-toggle:hover { border-color: var(--gold); color: var(--gold); }
-  .hint-box {
-    margin-top: 0.5rem;
-    padding: 0.85rem 1rem;
-    background: #fffbf0;
-    border: 1px solid #e8d99a;
-    border-radius: 4px;
-    font-size: 0.82rem;
-    color: #6a5720;
-    line-height: 1.6;
-    display: none;
-  }
-  .hint-box.show { display: block; animation: fadeIn 0.25s ease; }
+        /* Hint */
+        .hint-area { margin-top: 1rem; }
+        .hint-toggle {
+            background: none;
+            border: 1px dashed var(--border);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-size: 0.78rem;
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.18s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .hint-toggle:hover { border-color: var(--gold); color: var(--gold); }
+        .hint-box {
+            margin-top: 0.5rem;
+            padding: 0.85rem 1rem;
+            background: #fffbf0;
+            border: 1px solid #e8d99a;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            color: #6a5720;
+            line-height: 1.6;
+            display: none;
+        }
+        .hint-box.show { display: block; animation: fadeIn 0.25s ease; }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-  /* Card footer */
-  .card-footer {
-    padding: 1.25rem 1.75rem;
-    border-top: 1px solid var(--border);
-    background: var(--cream);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-  }
+        /* Card footer */
+        .card-footer {
+            padding: 1.25rem 1.75rem;
+            border-top: 1px solid var(--border);
+            background: var(--cream);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
 
-  .btn {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 0.65rem 1.5rem;
-    border-radius: 3px;
-    cursor: pointer;
-    border: none;
-    transition: all 0.18s;
-  }
-  .btn-primary {
-    background: var(--ink);
-    color: #fff;
-  }
-  .btn-primary:hover { background: #2d2d4a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,26,46,0.2); }
-  .btn-secondary {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-  }
-  .btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
-  .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .btn {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 0.65rem 1.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.18s;
+        }
+        .btn-primary {
+            background: var(--ink);
+            color: #fff;
+        }
+        .btn-primary:hover { background: #2d2d4a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,26,46,0.2); }
+        .btn-secondary {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
+        .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-  /* Result screen */
-  #result-screen {
-    display: none;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    box-shadow: 0 2px 20px rgba(26,26,46,0.06);
-    padding: 3rem 2rem;
-    text-align: center;
-    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .result-score-ring {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    border: 4px solid var(--accent);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    background: var(--accent-light);
-  }
-  .result-score-num {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-  }
-  .result-score-denom { font-size: 0.75rem; color: var(--muted); }
-  .result-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-  }
-  .result-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+        /* Result screen */
+        #result-screen {
+            display: none;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-shadow: 0 2px 20px rgba(26,26,46,0.06);
+            padding: 3rem 2rem;
+            text-align: center;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .result-score-ring {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 4px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: var(--accent-light);
+        }
+        .result-score-num {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+        .result-score-denom { font-size: 0.75rem; color: var(--muted); }
+        .result-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+        .result-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
 
-  .result-breakdown {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-  .result-dot {
-    aspect-ratio: 1;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 700;
-  }
-  .result-dot.ok { background: var(--correct-bg); color: var(--correct); border: 2px solid var(--correct); }
-  .result-dot.bad { background: var(--wrong-bg); color: var(--wrong); border: 2px solid var(--wrong); }
+        .result-breakdown {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* ── [수정됨] 결과 도장 스타일 (색연필 느낌) ── */
+        .result-dot {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            position: relative;
+            background: none !important;
+            border: none !important;
+            color: var(--ink);
+        }
 
-  .btn-restart {
-    background: var(--accent);
-    color: #fff;
-    padding: 0.8rem 2rem;
-    font-size: 0.85rem;
-  }
-  .btn-restart:hover { background: #a84e2c; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,96,58,0.3); }
+        /* 정답 시: 빨간 색연필 동그라미 (SVG 배경) */
+        .result-dot.ok::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 C 25 10, 8 30, 12 55 C 16 80, 40 90, 65 85 C 90 80, 95 45, 80 25 C 70 15, 45 15, 30 25" stroke="%23c8603a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.85;
+            transform: scale(1.2) rotate(-5deg);
+        }
 
-  /* Logo footer */
-  .logo-footer {
-    margin-top: 2rem;
-    padding: 1.25rem 1.5rem;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    text-align: center;
-  }
-  .logo-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.6rem;
-  }
-  .logo-img {
-    height: 44px;
-    width: auto;
-    object-fit: contain;
-  }
-  .logo-caption {
-    font-size: 0.72rem;
-    color: var(--muted);
-    line-height: 1.5;
-  }
+        /* 오답 시: 연필 사선 빗금 */
+        .result-dot.bad::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><line x1="20" y1="20" x2="80" y2="80" stroke="%237a7060" stroke-width="4" stroke-linecap="round"/><line x1="80" y1="20" x2="20" y2="80" stroke="%237a7060" stroke-width="4" stroke-linecap="round"/></svg>');
+            background-size: 60%;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.4;
+        }
+        .result-dot.bad { color: var(--muted); }
 
-  /* Divider decoration */
-  .ornament {
-    text-align: center;
-    color: var(--border);
-    font-size: 1rem;
-    letter-spacing: 0.5em;
-    margin: 1.5rem 0 0;
-  }
-</style>
+        .btn-restart {
+            background: var(--accent);
+            color: #fff;
+            padding: 0.8rem 2rem;
+            font-size: 0.85rem;
+        }
+        .btn-restart:hover { background: #a84e2c; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,96,58,0.3); }
+
+        /* Logo footer */
+        .logo-footer {
+            margin-top: 2rem;
+            padding: 1.25rem 1.5rem;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.6rem;
+        }
+        .logo-img {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+        }
+        .logo-caption {
+            font-size: 0.72rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* Divider decoration */
+        .ornament {
+            text-align: center;
+            color: var(--border);
+            font-size: 1rem;
+            letter-spacing: 0.5em;
+            margin: 1.5rem 0 0;
+        }
+    </style>
 </head>
 <body>
 
 <div class="quiz-shell">
 
-  <!-- ── INDEX SCREEN ── -->
-  <div id="index-screen">
-    <div class="index-logo">
-      <img src="logo.png" alt="교육정책네트워크">
-    </div>
-
-    <div class="index-card">
-      <div class="index-hero">
-        <div class="index-issue">교육정책포럼 · 제393호 · 2026년 3월호</div>
-        <h1 class="index-title">잠자는 교실,<br>떠나는 아이들</h1>
-        <p class="index-subtitle">그 현상과 과제 — 확인 퀴즈</p>
-      </div>
-
-      <div class="index-body">
-        <div class="index-meta">
-          <div class="meta-item">
-            <div class="meta-icon">📝</div>
-            <span class="meta-label">문항 수</span>
-            <span class="meta-value">5문제</span>
-          </div>
-          <div class="meta-item">
-            <div class="meta-icon">⏱️</div>
-            <span class="meta-label">예상 시간</span>
-            <span class="meta-value">5~10분</span>
-          </div>
-          <div class="meta-item">
-            <div class="meta-icon">📖</div>
-            <span class="meta-label">출처</span>
-            <span class="meta-value">포럼 393호</span>
-          </div>
+    <div id="index-screen">
+        <div class="index-logo">
+            <img src="logo.png" alt="교육정책네트워크">
         </div>
 
-        <p class="index-desc">
-          이 퀴즈는 교육정책포럼 2026년 3월호의 주요 내용을 바탕으로 제작되었습니다.
-          교실 이탈 유형, 핀란드 교육 지원 체계, 학업중단 통계 등
-          포럼의 핵심 개념을 얼마나 이해하고 있는지 확인해보세요.
-        </p>
+        <div class="index-card">
+            <div class="index-hero">
+                <div class="index-issue">교육정책포럼 · 제393호 · 2026년 3월호</div>
+                <h1 class="index-title">잠자는 교실,<br>떠나는 아이들</h1>
+                <p class="index-subtitle">그 현상과 과제 — 확인 퀴즈</p>
+            </div>
 
-        <div class="index-topics">
-          <p class="index-topics-title">수록 주제</p>
-          <div class="topic-tags">
-            <span class="topic-tag">교실 이탈 유형 분류</span>
-            <span class="topic-tag">핀란드 JOPO 교실</span>
-            <span class="topic-tag">전략적 자퇴와 구조</span>
-            <span class="topic-tag">학업중단율 통계</span>
-            <span class="topic-tag">3단계 학습 지원 체계</span>
-          </div>
-        </div>
+            <div class="index-body">
+                <div class="index-meta">
+                    <div class="meta-item">
+                        <div class="meta-icon">📝</div>
+                        <span class="meta-label">문항 수</span>
+                        <span class="meta-value">5문제</span>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-icon">⏱️</div>
+                        <span class="meta-label">예상 시간</span>
+                        <span class="meta-value">5~10분</span>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-icon">📖</div>
+                        <span class="meta-label">출처</span>
+                        <span class="meta-value">포럼 393호</span>
+                    </div>
+                </div>
 
-        <button class="btn-start" onclick="startQuiz()">
-          퀴즈 시작하기 <span class="btn-start-arrow">→</span>
-        </button>
-      </div>
-    </div>
-  </div>
+                <p class="index-desc">
+                    이 퀴즈는 교육정책포럼 2026년 3월호의 주요 내용을 바탕으로 제작되었습니다.
+                    교실 이탈 유형, 핀란드 교육 지원 체계, 학업중단 통계 등
+                    포럼의 핵심 개념을 얼마나 이해하고 있는지 확인해보세요.
+                </p>
 
-  <!-- ── QUIZ SCREEN ── -->
-  <div id="quiz-screen">
-    <div class="quiz-header">
-      <div class="quiz-eyebrow">Education Quiz</div>
-      <h1 class="quiz-title">[제393호] 잠자는 교실, 떠나는 아이들</h1>
-    </div>
+                <div class="index-topics">
+                    <p class="index-topics-title">수록 주제</p>
+                    <div class="topic-tags">
+                        <span class="topic-tag">교실 이탈 유형 분류</span>
+                        <span class="topic-tag">핀란드 JOPO 교실</span>
+                        <span class="topic-tag">전략적 자퇴와 구조</span>
+                        <span class="topic-tag">학업중단율 통계</span>
+                        <span class="topic-tag">3단계 학습 지원 체계</span>
+                    </div>
+                </div>
 
-  <div class="progress-area">
-    <span class="progress-label" id="progress-label">1 / 5</span>
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
-    </div>
-  </div>
-
-  <!-- Q1 -->
-  <div class="card active" id="q1">
-    <div class="card-top">
-      <span class="q-badge">Q 01</span>
-      <span class="q-category">교실 이탈 유형</span>
-    </div>
-    <div class="card-body">
-      <p class="question-text">성열관 교수가 분류한 교실 내 이탈 유형 중, 높은 학업 성취도를 보임에도 불구하고 학교 수업의 효용성을 낮게 평가하여 수업 시간에 잠을 자는 학생들을 지칭하는 용어는 무엇입니까?</p>
-      <div class="options">
-        <div class="option" onclick="select(this, 'q1', false)">
-          <span class="option-key">A</span>
-          <span class="option-text">내부적 망명자</span>
+                <button class="btn-start" onclick="startQuiz()">
+                    퀴즈 시작하기 <span class="btn-start-arrow">→</span>
+                </button>
+            </div>
         </div>
-        <div class="option" onclick="select(this, 'q1', false)">
-          <span class="option-key">B</span>
-          <span class="option-text">기본학력 미도달자</span>
-        </div>
-        <div class="option" onclick="select(this, 'q1', false)">
-          <span class="option-key">C</span>
-          <span class="option-text">전략적 이탈자</span>
-        </div>
-        <div class="option" onclick="select(this, 'q1', true)">
-          <span class="option-key">D</span>
-          <span class="option-text">정시 파이터</span>
-        </div>
-      </div>
-      <div class="feedback" id="fb-q1"></div>
-      <div class="hint-area">
-        <button class="hint-toggle" onclick="toggleHint('hint-q1')">💡 힌트 보기</button>
-        <div class="hint-box" id="hint-q1">학교 수업보다 사교육이나 자습을 통한 입시 준비를 우선시하는 학생들의 별칭을 떠올려 보세요.</div>
-      </div>
-    </div>
-    <div class="card-footer">
-      <button class="btn btn-secondary" disabled>← 이전</button>
-      <button class="btn btn-primary" id="next-q1" onclick="nextQuestion(1)" disabled>다음 →</button>
-    </div>
-  </div>
-
-  <!-- Q2 -->
-  <div class="card" id="q2">
-    <div class="card-top">
-      <span class="q-badge">Q 02</span>
-      <span class="q-category">핀란드 JOPO 교실</span>
-    </div>
-    <div class="card-body">
-      <p class="question-text">핀란드의 'JOPO(유연한 기본교육) 교실'에 대한 설명으로 가장 적절하지 않은 것은 무엇입니까?</p>
-      <div class="options">
-        <div class="option" onclick="select(this, 'q2', false)">
-          <span class="option-key">A</span>
-          <span class="option-text">사회정서적 기술 강화를 위해 연중 숙박형 학습 캠프를 진행한다.</span>
-        </div>
-        <div class="option" onclick="select(this, 'q2', false)">
-          <span class="option-key">B</span>
-          <span class="option-text">지역의 직업 기관에서 진행되는 무급 인턴십 과정이 포함된다.</span>
-        </div>
-        <div class="option" onclick="select(this, 'q2', true)">
-          <span class="option-key">C</span>
-          <span class="option-text">학업 성적이 우수한 학생들을 선발하여 심화 학습을 제공한다.</span>
-        </div>
-        <div class="option" onclick="select(this, 'q2', false)">
-          <span class="option-key">D</span>
-          <span class="option-text">10명 내외의 소그룹 학생들을 대상으로 팀티칭 수업을 운영한다.</span>
-        </div>
-      </div>
-      <div class="feedback" id="fb-q2"></div>
-      <div class="hint-area">
-        <button class="hint-toggle" onclick="toggleHint('hint-q2')">💡 힌트 보기</button>
-        <div class="hint-box" id="hint-q2">이 프로그램이 어떤 학생들을 대상으로 하며, 무엇을 회복시키려 하는지 생각해보세요.</div>
-      </div>
-    </div>
-    <div class="card-footer">
-      <button class="btn btn-secondary" onclick="prevQuestion(2)">← 이전</button>
-      <button class="btn btn-primary" id="next-q2" onclick="nextQuestion(2)" disabled>다음 →</button>
-    </div>
-  </div>
-
-  <!-- Q3 -->
-  <div class="card" id="q3">
-    <div class="card-top">
-      <span class="q-badge">Q 03</span>
-      <span class="q-category">전략적 자퇴와 평가 체계</span>
-    </div>
-    <div class="card-body">
-      <p class="question-text">박하나 교수가 언급한 고등학교의 구조적 특징 중, 학생들이 '전략적 자퇴'를 선택하게 만드는 주요 원인인 '회복 기회 부재'의 구체적인 의미는 무엇입니까?</p>
-      <div class="options">
-        <div class="option" onclick="select(this, 'q3', false)">
-          <span class="option-key">A</span>
-          <span class="option-text">기초학력 미달 학생을 위한 보충 학습 교과목 개설의 부족</span>
-        </div>
-        <div class="option" onclick="select(this, 'q3', false)">
-          <span class="option-key">B</span>
-          <span class="option-text">학교 내 상담 인력의 부족으로 정서적 지원을 받기 어려운 상황</span>
-        </div>
-        <div class="option" onclick="select(this, 'q3', false)">
-          <span class="option-key">C</span>
-          <span class="option-text">학교 밖 청소년을 위한 대안 교육 시설 및 재입학 프로그램의 미비</span>
-        </div>
-        <div class="option" onclick="select(this, 'q3', true)">
-          <span class="option-key">D</span>
-          <span class="option-text">한 번 고정된 내신 성적과 등급을 추후에 만회하기 어려운 경직된 평가 체제</span>
-        </div>
-      </div>
-      <div class="feedback" id="fb-q3"></div>
-      <div class="hint-area">
-        <button class="hint-toggle" onclick="toggleHint('hint-q3')">💡 힌트 보기</button>
-        <div class="hint-box" id="hint-q3">내신 성적이 숫자로 고정되어 입시에 미치는 영향력과 그 가역성을 생각해보세요.</div>
-      </div>
-    </div>
-    <div class="card-footer">
-      <button class="btn btn-secondary" onclick="prevQuestion(3)">← 이전</button>
-      <button class="btn btn-primary" id="next-q3" onclick="nextQuestion(3)" disabled>다음 →</button>
-    </div>
-  </div>
-
-  <!-- Q4 -->
-  <div class="card" id="q4">
-    <div class="card-top">
-      <span class="q-badge">Q 04</span>
-      <span class="q-category">학업중단율 통계</span>
-    </div>
-    <div class="card-body">
-      <p class="question-text">2024년 교육통계 자료를 기준으로, 고등학교 체제 유형별 학업중단율이 가장 높게 나타난 학교 유형은 무엇입니까?</p>
-      <div class="options">
-        <div class="option" onclick="select(this, 'q4', true)">
-          <span class="option-key">A</span>
-          <span class="option-text">특성화고(직업계고)</span>
-        </div>
-        <div class="option" onclick="select(this, 'q4', false)">
-          <span class="option-key">B</span>
-          <span class="option-text">자율고</span>
-        </div>
-        <div class="option" onclick="select(this, 'q4', false)">
-          <span class="option-key">C</span>
-          <span class="option-text">특목고</span>
-        </div>
-        <div class="option" onclick="select(this, 'q4', false)">
-          <span class="option-key">D</span>
-          <span class="option-text">일반고</span>
-        </div>
-      </div>
-      <div class="feedback" id="fb-q4"></div>
-      <div class="hint-area">
-        <button class="hint-toggle" onclick="toggleHint('hint-q4')">💡 힌트 보기</button>
-        <div class="hint-box" id="hint-q4">제시된 통계 그래프에서 가장 높은 비율을 기록하며 학교 부적응 사유 비중이 컸던 유형을 찾아보세요.</div>
-      </div>
-    </div>
-    <div class="card-footer">
-      <button class="btn btn-secondary" onclick="prevQuestion(4)">← 이전</button>
-      <button class="btn btn-primary" id="next-q4" onclick="nextQuestion(4)" disabled>다음 →</button>
-    </div>
-  </div>
-
-  <!-- Q5 -->
-  <div class="card" id="q5">
-    <div class="card-top">
-      <span class="q-badge">Q 05</span>
-      <span class="q-category">핀란드 학습 지원 체계</span>
-    </div>
-    <div class="card-body">
-      <p class="question-text">핀란드의 3단계 학습 지원 체계 중, 개별 학습 계획(Oppimissuunnitelma)을 바탕으로 시간제 특수교사와의 협력을 통해 제공되는 체계적이고 지속적인 단계는 무엇입니까?</p>
-      <div class="options">
-        <div class="option" onclick="select(this, 'q5', true)">
-          <span class="option-key">A</span>
-          <span class="option-text">강화 지원</span>
-        </div>
-        <div class="option" onclick="select(this, 'q5', false)">
-          <span class="option-key">B</span>
-          <span class="option-text">통합 지원</span>
-        </div>
-        <div class="option" onclick="select(this, 'q5', false)">
-          <span class="option-key">C</span>
-          <span class="option-text">특별 지원</span>
-        </div>
-        <div class="option" onclick="select(this, 'q5', false)">
-          <span class="option-key">D</span>
-          <span class="option-text">일반 지원</span>
-        </div>
-      </div>
-      <div class="feedback" id="fb-q5"></div>
-      <div class="hint-area">
-        <button class="hint-toggle" onclick="toggleHint('hint-q5')">💡 힌트 보기</button>
-        <div class="hint-box" id="hint-q5">일반적인 지원을 넘어 정기적인 지원이 필요할 때 적용되는 두 번째 단계를 떠올려 보세요.</div>
-      </div>
-    </div>
-    <div class="card-footer">
-      <button class="btn btn-secondary" onclick="prevQuestion(5)">← 이전</button>
-      <button class="btn btn-primary" id="next-q5" onclick="showResult()" disabled>완료 →</button>
-    </div>
-  </div>
-
-  <!-- Result -->
-  <div id="result-screen">
-    <div class="result-score-ring">
-      <span class="result-score-num" id="score-num">0</span>
-      <span class="result-score-denom">/ 5</span>
-    </div>
-    <h2 class="result-title" id="result-title">퀴즈 완료!</h2>
-    <p class="result-sub" id="result-sub"></p>
-    <div class="result-breakdown" id="result-dots"></div>
-    <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
-      <button class="btn btn-secondary" onclick="location.reload()" style="padding:0.75rem 1.5rem;">← 처음으로</button>
-      <button class="btn btn-restart" onclick="restart()">다시 풀기</button>
-    </div>
-  </div>
-
-  <div class="ornament">· · ·</div>
-
-  <div class="logo-footer">
-    <div class="logo-badge">
-      <img src="logo.png" alt="교육정책네트워크" class="logo-img">
     </div>
 
-  </div><!-- /quiz-screen -->
-</div><!-- /quiz-shell -->
+    <div id="quiz-screen">
+        <div class="quiz-header">
+            <div class="quiz-eyebrow">Education Quiz</div>
+            <h1 class="quiz-title">[제393호] 잠자는 교실, 떠나는 아이들</h1>
+        </div>
 
-<script>
-  const answers = {};
-  const correct = { q1: false, q2: false, q3: false, q4: false, q5: false };
+        <div class="progress-area">
+            <span class="progress-label" id="progress-label">1 / 5</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
+            </div>
+        </div>
 
-  const messages = {
-    correct: ['정확합니다!', '훌륭해요!', '맞습니다!', '정답이에요!', '완벽해요!'],
-    wrong:   ['아쉽네요.', '틀렸어요.', '다시 생각해보세요.', '아깝습니다.', '오답이에요.']
-  };
+        <div class="card active" id="q1">
+            <div class="card-top">
+                <span class="q-badge">Q 01</span>
+                <span class="q-category">교실 이탈 유형</span>
+            </div>
+            <div class="card-body">
+                <p class="question-text">성열관 교수가 분류한 교실 내 이탈 유형 중, 높은 학업 성취도를 보임에도 불구하고 학교 수업의 효용성을 낮게 평가하여 수업 시간에 잠을 자는 학생들을 지칭하는 용어는 무엇입니까?</p>
+                <div class="options">
+                    <div class="option" onclick="select(this, 'q1', false)">
+                        <span class="option-key">A</span>
+                        <span class="option-text">내부적 망명자</span>
+                    </div>
+                    <div class="option" onclick="select(this, 'q1', false)">
+                        <span class="option-key">B</span>
+                        <span class="option-text">기본학력 미도달자</span>
+                    </div>
+                    <div class="option" onclick="select(this, 'q1', false)">
+                        <span class="option-key">C</span>
+                        <span class="option-text">전략적 이탈자</span>
+                    </div>
+                    <div class="option" onclick="select(this, 'q1', true)">
+                        <span class="option-key">D</span>
+                        <span class="option-text">정시 파이터</span>
+                    </div>
+                </div>
+                <div class="feedback" id="fb-q1"></div>
+                <div class="hint-area">
+                    <button class="hint-toggle" onclick="toggleHint('hint-q1')">💡 힌트 보기</button>
+                    <div class="hint-box" id="hint-q1">학교 수업보다 사교육이나 자습을 통한 입시 준비를 우선시하는 학생들의 별칭을 떠올려 보세요.</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-secondary" disabled>← 이전</button>
+                <button class="btn btn-primary" id="next-q1" onclick="nextQuestion(1)" disabled>다음 →</button>
+            </div>
+        </div>
 
-  let currentQ = 1;
-
-  function select(el, qId, isCorrect) {
-    const container = el.closest('.card-body');
-    if (container.querySelector('.option.correct, .option.wrong')) return;
-
-    const options = container.querySelectorAll('.option');
-    options.forEach(o => { o.classList.add('dimmed'); o.style.pointerEvents = 'none'; });
-    el.classList.remove('dimmed');
-    el.classList.add(isCorrect ? 'correct' : 'wrong');
-
-    correct[qId] = isCorrect;
-    answers[qId] = true;
-
-    const fb = document.getElementById('fb-' + qId);
-    const idx = Math.floor(Math.random() * 5);
-    if (isCorrect) {
-      fb.className = 'feedback show correct-fb';
-      fb.innerHTML = `<span class="feedback-icon">✓</span><div class="feedback-content"><strong>${messages.correct[idx]}</strong>정답입니다.</div>`;
-    } else {
-      fb.className = 'feedback show wrong-fb';
-      fb.innerHTML = `<span class="feedback-icon">✗</span><div class="feedback-content"><strong>${messages.wrong[idx]}</strong>정답은 강조 표시된 항목을 확인하세요.</div>`;
-      // highlight correct
-      options.forEach(o => {
-        if (o.querySelector('.option-text') && o !== el) {
-          // find the correct one by re-checking onclick
-          const onclick = o.getAttribute('onclick');
-          if (onclick && onclick.includes('true')) {
-            o.classList.remove('dimmed');
-            o.classList.add('correct');
-          }
-        }
-      });
-    }
-
-    document.getElementById('next-' + qId).disabled = false;
-  }
-
-  function nextQuestion(n) {
-    document.getElementById('q' + n).classList.remove('active');
-    if (n < 5) {
-      document.getElementById('q' + (n + 1)).classList.add('active');
-      currentQ = n + 1;
-    }
-    updateProgress(n + 1);
-  }
-
-  function prevQuestion(n) {
-    document.getElementById('q' + n).classList.remove('active');
-    document.getElementById('q' + (n - 1)).classList.add('active');
-    currentQ = n - 1;
-    updateProgress(n - 1);
-  }
-
-  function updateProgress(n) {
-    const capped = Math.min(n, 5);
-    document.getElementById('progress-label').textContent = capped + ' / 5';
-    document.getElementById('progress-fill').style.width = (capped / 5 * 100) + '%';
-  }
-
-  function toggleHint(id) {
-    const box = document.getElementById(id);
-    box.classList.toggle('show');
-  }
-
-  function showResult() {
-    for (let i = 1; i <= 5; i++) {
-      document.getElementById('q' + i).classList.remove('active');
-    }
-    document.getElementById('progress-fill').style.width = '100%';
-    document.getElementById('progress-label').textContent = '5 / 5';
-
-    const score = Object.values(correct).filter(Boolean).length;
-    document.getElementById('score-num').textContent = score;
-
-    const titles = ['다시 한번 도전해보세요', '조금 더 공부해봐요', '잘 하셨어요!', '훌륭합니다!', '만점입니다! 🎉'];
-    const subs = [
-      '아직 내용이 낯설 수 있어요. 다시 학습 후 도전해보세요.',
-      '절반 이상 맞추셨어요. 조금만 더 복습해볼까요?',
-      '좋은 결과입니다. 틀린 문제를 다시 확인해보세요.',
-      '거의 완벽해요! 아쉬운 1문제를 점검해보세요.',
-      '모든 문제를 완벽하게 맞추셨습니다!'
-    ];
-
-    document.getElementById('result-title').textContent = titles[score - 1] || titles[0];
-    document.getElementById('result-sub').textContent = subs[score - 1] || subs[0];
-
-    const dots = document.getElementById('result-dots');
-    dots.innerHTML = '';
-    for (let i = 1; i <= 5; i++) {
-      const d = document.createElement('div');
-      d.className = 'result-dot ' + (correct['q' + i] ? 'ok' : 'bad');
-      d.textContent = i;
-      dots.appendChild(d);
-    }
-
-    document.getElementById('result-screen').style.display = 'block';
-  }
-
-  function startQuiz() {
-    document.getElementById('index-screen').style.display = 'none';
-    const qs = document.getElementById('quiz-screen');
-    qs.style.display = 'block';
-    qs.style.animation = 'none';
-    qs.offsetHeight; // reflow
-    qs.style.animation = 'slideIn 0.4s cubic-bezier(0.4,0,0.2,1)';
-  }
-
-  function restart() {
-    location.reload();
-  }
-</script>
-</body>
-</html>
+        <div class="card" id="q2">
+            <div class="card-top">
+                <span class="q-badge">Q 02</span>
+                <span class="q-category">핀란드 JOPO 교실</span>
+            </div>
+            <div class="card-body">
+                <p class="question-text">핀란드의 'JOPO(유연한 기본교육) 교실'에 대한 설명으로 가장 적절하지 않은 것은 무엇입니까?</p>
+                <div class="options">
+                    <div class="option" onclick="select(this, 'q2', false)">
+                        <span class="option-key">A</span>
+                        <span class="option-text">사회정서적 기술 강화를 위해 연중 숙박형 학습 캠프를 진행한다.</span>
+                    </div>
+                    <div class="option" onclick="select(this, 'q2', false)">
+                        <span class="
